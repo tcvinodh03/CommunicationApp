@@ -5,14 +5,14 @@ using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using CommunicationAPI.Data;
 using CommunicationAPI.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommunicationAPI.Controllers
 {
-    [ApiController]
-    [Route("api/[Controller]")]
-    public class UserController : ControllerBase
+    [Authorize]
+    public class UserController : BaseApiController
     {
         private readonly DataContext _context;
 
@@ -21,6 +21,7 @@ namespace CommunicationAPI.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers(){
             return await _context.Users.ToListAsync();
