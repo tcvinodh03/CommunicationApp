@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { AccountService } from './_services/account.service';
 
 @Component({
   selector: 'app-root',
@@ -7,17 +7,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'CommunicationPortal';
-  users: any;
-  constructor(private http: HttpClient) {
+  title = 'CommunicationPortal';  
+  constructor(private accountServices: AccountService) {
   }
-  ngOnInit(): void {
-    this.http.get('http://localhost:5000/api/User').subscribe({
-      next: response => this.users = response,
-      error: error => this.errorLog(error),
-      complete: () => console.log('Request has been completed')
-    })
+  ngOnInit(): void {    
+    this.setCurrentUser();
   }
+
+  setCurrentUser() {
+    const userString = localStorage.getItem('user');
+    if (!userString) return;
+    const user = JSON.parse(userString);
+    this.accountServices.setCurrentUser(user);
+  }
+
   errorLog(message: string): void {
     console.log(message);
   }
