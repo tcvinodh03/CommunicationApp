@@ -1,6 +1,7 @@
 using CommunicationAPI.Data;
 using CommunicationAPI.Extension;
 using CommunicationAPI.Interface;
+using CommunicationAPI.Middleware;
 using CommunicationAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,13 @@ builder.Services.AddIdentityServices(builder.Configuration);
 //builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
+
+//if (builder.Environment.IsDevelopment())
+//{
+//    app.UseDeveloperExceptionPage();
+//}
 
 //// Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())

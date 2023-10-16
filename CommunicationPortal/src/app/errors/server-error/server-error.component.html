@@ -1,0 +1,16 @@
+<h4>Internal Server error - refreshing the page will resolve the issue</h4>
+<ng-container *ngIf="error">
+    <h5 class="text-danger"> Error:{{error.message}} </h5>
+    <p>Note: This error probably from server </p>
+    <ol>
+        <li>Check the chrome network tab</li>
+        <li>check the API endpoint</li>
+        <li>Reproduce the issue in postman</li>
+    </ol>
+    <p style="font-weight: bold;">
+        Following line may have issue in API
+    </p>
+    <code class="mt-5" style="background-color: whitesmoke;">
+        {{error.details}}
+    </code>
+</ng-container>
