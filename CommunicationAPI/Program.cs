@@ -5,6 +5,7 @@ using CommunicationAPI.Middleware;
 using CommunicationAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -47,5 +48,19 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+	var context = services.GetRequiredService<DataContext>();
+	await context.Database.MigrateAsync();
+	await Seed.SeedUser(context);
+}
+catch (Exception ex)
+{
+	var logger = services.GetService<ILogger<Program>>();
+	logger.LogError(ex, "An error orrcured");
+}
 
 app.Run();

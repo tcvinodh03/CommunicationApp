@@ -16,6 +16,8 @@ namespace CommunicationAPI.Extension
 
             services.AddCors();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IuserRepo, UserRepo>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             return services;
         }
     }
