@@ -27,7 +27,7 @@ namespace CommunicationAPI.Controllers
             _mapper = mapper;
         }
 
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MemberDTO>>> GetUsers()
         {
@@ -44,7 +44,8 @@ namespace CommunicationAPI.Controllers
         [HttpGet("{username}")]
         public async Task<ActionResult<MemberDTO>> GetUserByName(string userName)
         {
-            return await _userRepo.GetMemberByNameAsync(userName);
+             var abc = await _userRepo.GetMemberByNameAsync(userName);
+            return abc;
 
         }
 
