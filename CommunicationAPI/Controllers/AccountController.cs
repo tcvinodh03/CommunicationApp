@@ -45,7 +45,8 @@ namespace CommunicationAPI.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDTO>> Login(LoginDto objLogin)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName.Equals(objLogin.userName));
+            var user = await _context.Users.Include(p=>p.Photos).
+                FirstOrDefaultAsync(u => u.UserName.Equals(objLogin.userName));
             if (user == null) return Unauthorized("User did not exists");
             using var hmac = new HMACSHA512(user.PasswordSalt);
             var computedHASH = hmac.ComputeHash(Encoding.UTF8.GetBytes(objLogin.password));
@@ -53,11 +54,13 @@ namespace CommunicationAPI.Controllers
             {
                 if (computedHASH[i] != user.PasswordHash[i]) return Unauthorized("credentials not vaid");
             }
-            return new UserDTO
+            var objLoggedUser=  new UserDTO
             {
                 UserName = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain).Url
             };
+            return objLoggedUser;
         }
 
         private async Task<bool> UserExists(string userName)

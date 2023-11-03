@@ -38,6 +38,15 @@ export class MembersService {
       })
     );
   }
+
+  setMainPhoto(photoId: number) {
+    debugger;
+    return this.http.put(this.baseUrl + 'user/set-main-photo/' + photoId, {});
+  }
+  deletePhoto(photoId: number) {
+    return this.http.delete(this.baseUrl + 'user/delete-photo/' + photoId);
+  }
+
   // getHttpOptions() {
   //   const userString = localStorage.getItem('user');
   //   if (!userString) return;
