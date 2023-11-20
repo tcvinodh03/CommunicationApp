@@ -28,9 +28,11 @@ export class AccountService {
   }
 
   registerUser(model : any){
+    debugger;
     return this.http.post<User>(this.baseUrl+'account/register',model).pipe(
       map(u=>{
-        if(u){          
+        if(u){    
+          debugger;      
           this.setCurrentUser(u);
         }
         return u;
