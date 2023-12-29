@@ -44,10 +44,10 @@ export class MemberEditComponent implements OnInit {
   }
 
   updateMembers() {
-    debugger;
+    
     this.memberServicer.updateMember(this.editForm?.value).subscribe({
       next:_=>{
-        debugger;
+        
         this.toastrService.success("this.memberObject");
         this.editForm?.reset(this.memberObject);
       }

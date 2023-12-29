@@ -1,5 +1,6 @@
 ﻿using CommunicationAPI.DTO;
 using CommunicationAPI.Entities;
+using CommunicationAPI.Helpers;
 
 namespace CommunicationAPI.Interface
 {
@@ -10,8 +11,7 @@ namespace CommunicationAPI.Interface
         Task<IEnumerable<AppUser>> GetUserAsync();
         Task<AppUser> GetUserByIdAsync(int id);
         Task<AppUser> GetUserByNameAsync(string userName);
-
-        Task<IEnumerable<MemberDTO>> GetMemberAsync();
+        Task<PagedList<MemberDTO>> GetMemberAsync(UserParams userParams);
         Task<MemberDTO> GetMemberByIdAsync(int id);
         Task<MemberDTO> GetMemberByNameAsync(string userName);
     }

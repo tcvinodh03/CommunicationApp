@@ -48,7 +48,7 @@ export class PhotoEditorComponent implements OnInit {
   }
 
   setMainPhoto(photo: Photo) {
-    debugger;
+    
     this.memberService.setMainPhoto(photo.id).subscribe({
       next: () => {
         if (this.userObject && this.memberObject) {

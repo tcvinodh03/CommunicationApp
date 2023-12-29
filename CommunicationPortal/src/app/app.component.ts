@@ -8,6 +8,8 @@ import { AccountService } from './_services/account.service';
 })
 export class AppComponent implements OnInit {
   title = 'CommunicationPortal';  
+  
+  showPortal = false;
   constructor(private accountServices: AccountService) {
   }
   ngOnInit(): void {    
@@ -23,5 +25,16 @@ export class AppComponent implements OnInit {
 
   errorLog(message: string): void {
     console.log(message);
+  }
+  openMe(){
+    this.showPortal = true;
+  }
+  PrintMe(){
+    this.showPortal = false;
+    window.print();
+  }
+  print(){
+    this.showPortal = false;
+    window.print();
   }
 }

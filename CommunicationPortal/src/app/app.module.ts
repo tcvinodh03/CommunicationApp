@@ -24,7 +24,8 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { PhotoEditorComponent } from './member/photo-editor/photo-editor.component';
 import { TextInputComponent } from './_userControls/text-input/text-input.component';
 import { DatePickerComponent } from './_userControls/date-picker/date-picker.component';
-
+import { PrintComponent } from './print.component';
+import { PortalModule } from '@angular/cdk/portal';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { DatePickerComponent } from './_userControls/date-picker/date-picker.com
     MemberEditComponent,
     PhotoEditorComponent,
     TextInputComponent,   
-    DatePickerComponent  
+    DatePickerComponent,
+    PrintComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +54,8 @@ import { DatePickerComponent } from './_userControls/date-picker/date-picker.com
     FormsModule,
     SharedModule,
     NgxSpinnerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PortalModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

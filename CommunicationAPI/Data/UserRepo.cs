@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using CommunicationAPI.DTO;
 using CommunicationAPI.Entities;
+using CommunicationAPI.Helpers;
 using CommunicationAPI.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -21,11 +22,23 @@ namespace CommunicationAPI.Data
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<MemberDTO>> GetMemberAsync()
+        public async Task<PagedList<MemberDTO>> GetMemberAsync(UserParams userParams)
         {
-            return await _context.Users
-                .ProjectTo<MemberDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var query = _context.Users.AsQueryable();
+            query = query.Where(u => u.UserName != userParams.CurrentUserName);
+            query = query.Where(g => g.Gender == userParams.Gender);
+            var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
+            var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
+            var result = query.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
+
+            result = userParams.OrderBy switch
+            {
+                "created" => result.OrderByDescending(u => u.Created),
+                _ => result.OrderByDescending(u => u.LastActive)
+            };
+
+            return await PagedList<MemberDTO>.CreateAsync(result.AsNoTracking().ProjectTo<MemberDTO>(_mapper.ConfigurationProvider),
+                   userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<MemberDTO> GetMemberByIdAsync(int id)

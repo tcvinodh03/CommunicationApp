@@ -18,7 +18,8 @@ namespace CommunicationAPI.Services
         {
             var _claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId,appUser.UserName)
+                new Claim(JwtRegisteredClaimNames.NameId,appUser.Id.ToString()),
+                 new Claim(JwtRegisteredClaimNames.UniqueName,appUser.UserName),
             };
 
             var _signCredentials = new SigningCredentials(_symmetricSecurityKey, SecurityAlgorithms.HmacSha512Signature);

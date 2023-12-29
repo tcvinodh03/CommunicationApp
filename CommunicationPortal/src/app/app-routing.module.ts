@@ -13,6 +13,7 @@ import { MemberEditComponent } from './member/member-edit/member-edit.component'
 import { preventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 
 
+
 const routes: Routes = [
   {path:'',component:HomeComponent},
   {path:'',

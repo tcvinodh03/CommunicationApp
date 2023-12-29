@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using CommunicationAPI.Extension;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc.Filters;
+using CommunicationAPI.Helpers;
 
 namespace CommunicationAPI.Controllers
 {
@@ -36,9 +37,17 @@ namespace CommunicationAPI.Controllers
 
         //[AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDTO>>> GetUsers()
+        public async Task<ActionResult<PagedList<MemberDTO>>> GetUsers([FromQuery]UserParams userParams)
         {
-            return Ok(await _userRepo.GetMemberAsync());
+            var currentUser = await _userRepo.GetUserByNameAsync(User.getUserName());
+            userParams.CurrentUserName = currentUser.UserName;
+            if (string.IsNullOrEmpty(userParams.Gender))
+            {
+                userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
+            }
+            var userList = await _userRepo.GetMemberAsync(userParams);
+            Response.AddPaginationHeader(new PaginationHeader(userList.CurrentPage, userList.PageSize,userList.TotalCount,userList.TotalPages));
+            return Ok(userList);
         }
 
         [HttpGet("{id:int}")]
