@@ -25,9 +25,8 @@ namespace CommunicationAPI.Entities
 
         public List<Photo> Photos { get; set; } = new ();
 
-        //public int GetAge()
-        //{
-        //    return DateOfBirth.CalculateAge();
-        //}
+       public List<UserLike> LikedByUsers { get; set; }
+        public List<UserLike> LikedUsers { get; set; }
+
     }
 }

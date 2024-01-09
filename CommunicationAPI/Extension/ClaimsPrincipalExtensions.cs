@@ -9,9 +9,9 @@ namespace CommunicationAPI.Extension
             return user.FindFirst(ClaimTypes.Name).Value;
         }
 
-        public static string getUserId(this ClaimsPrincipal user)
+        public static int getUserId(this ClaimsPrincipal user)
         {
-            return user.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return int.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }

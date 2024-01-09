@@ -14,7 +14,7 @@ namespace CommunicationAPI.Helpers
             var userId = resultContent.HttpContext.User.getUserId();
 
             var repo = resultContent.HttpContext.RequestServices.GetRequiredService<IuserRepo>();
-            var user = await repo.GetUserByIdAsync(int.Parse(userId));
+            var user = await repo.GetUserByIdAsync(userId);
             user.LastActive = DateTime.Now;
             await repo.SaveAllAsync();
 
