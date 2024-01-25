@@ -12,21 +12,26 @@
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/messages" routerLinkActive="active">Messages</a>
                 </li>
-            </ng-container>           
+                <li *appHasRole="['Admin','Moderator']" class="nav-item">
+                    <a class="nav-link" routerLink="/admin" routerLinkActive="active">Administrator</a>
+                </li>
+            </ng-container>
             <li class="nav-item">
                 <a class="nav-link" routerLink="/errors" routerLinkActive="active">Error</a>
             </li>
         </ul>
         <div *ngIf="(accountService.currentUser$ | async) as user" class="dropdown" dropdown>
-            <img src="{{user.photoUrl || './asserts/user.png'}}" alt ="User Photo">
-            <a class="dropdown-toggle text-light text-decoration-none ms-2" dropdownToggle>Welcome {{user.knownAs | titlecase}}</a>
+            <img src="{{user.photoUrl || './asserts/user.png'}}" alt="User Photo">
+            <a class="dropdown-toggle text-light text-decoration-none ms-2" dropdownToggle>Welcome {{user.knownAs |
+                titlecase}}</a>
             <div class="dropdown-menu" *dropdownMenu>
                 <a class="dropdown-item" routerLink="/member/edit">Edit Profile </a>
                 <a class="dropdown-item" (click)="logout()">Logout </a>
             </div>
 
         </div>
-        <form *ngIf="!(accountService.currentUser$ | async)" #loginForm="ngForm" class="d-flex" (ngSubmit)="login()" autocomplete="off">
+        <form *ngIf="!(accountService.currentUser$ | async)" #loginForm="ngForm" class="d-flex" (ngSubmit)="login()"
+            autocomplete="off">
             <input name="username" [(ngModel)]="model.username" class="form-control me-2" type="text"
                 placeholder="User Name">
             <input name="password" [(ngModel)]="model.password" class="form-control me-2" type="password"

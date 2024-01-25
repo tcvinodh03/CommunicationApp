@@ -28,16 +28,16 @@ namespace CommunicationAPI.Controllers
         private readonly IPhotoService _photoService;
 
 
-        public UserController(IuserRepo userRepo, IMapper mapper,IPhotoService photoService)
+        public UserController(IuserRepo userRepo, IMapper mapper, IPhotoService photoService)
         {
             _userRepo = userRepo;
             _mapper = mapper;
             _photoService = photoService;
         }
 
-        //[AllowAnonymous]
+       
         [HttpGet]
-        public async Task<ActionResult<PagedList<MemberDTO>>> GetUsers([FromQuery]UserParams userParams)
+        public async Task<ActionResult<PagedList<MemberDTO>>> GetUsers([FromQuery] UserParams userParams)
         {
             var currentUser = await _userRepo.GetUserByNameAsync(User.getUserName());
             userParams.CurrentUserName = currentUser.UserName;
@@ -46,7 +46,7 @@ namespace CommunicationAPI.Controllers
                 userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
             }
             var userList = await _userRepo.GetMemberAsync(userParams);
-            Response.AddPaginationHeader(new PaginationHeader(userList.CurrentPage, userList.PageSize,userList.TotalCount,userList.TotalPages));
+            Response.AddPaginationHeader(new PaginationHeader(userList.CurrentPage, userList.PageSize, userList.TotalCount, userList.TotalPages));
             return Ok(userList);
         }
 
@@ -57,6 +57,7 @@ namespace CommunicationAPI.Controllers
             return await _userRepo.GetMemberByIdAsync(id);
         }
 
+        
         [HttpGet("{username}")]
         public async Task<ActionResult<MemberDTO>> GetUserByName(string userName)
         {
@@ -80,9 +81,9 @@ namespace CommunicationAPI.Controllers
         public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
         {
             var user = await _userRepo.GetUserByNameAsync(User.getUserName());
-            if(user==null) return NotFound();
+            if (user == null) return NotFound();
             var result = await _photoService.AddPhotoAsync(file);
-            if(result.Error!=null) return BadRequest(result.Error.Message);
+            if (result.Error != null) return BadRequest(result.Error.Message);
 
             var photoObj = new Photo();
             photoObj.Url = result.SecureUrl.AbsoluteUri;
@@ -91,7 +92,7 @@ namespace CommunicationAPI.Controllers
             user.Photos.Add(photoObj);
             if (await _userRepo.SaveAllAsync())
             {
-                return CreatedAtAction(nameof(GetUsers), new { username = User.getUserName() },_mapper.Map<PhotoDto>(photoObj));
+                return CreatedAtAction(nameof(GetUsers), new { username = User.getUserName() }, _mapper.Map<PhotoDto>(photoObj));
             }
             return BadRequest("Problem adding Photos");
         }
@@ -100,14 +101,14 @@ namespace CommunicationAPI.Controllers
         public async Task<ActionResult> SetMainPhoto(int photoid)
         {
             var user = await _userRepo.GetUserByNameAsync(User.getUserName());
-            if(user==null) return NotFound();
-            var photo=user.Photos.FirstOrDefault(x=>x.Id==photoid);
-            if(photo == null) return NotFound();
+            if (user == null) return NotFound();
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoid);
+            if (photo == null) return NotFound();
             if (photo.IsMain) return BadRequest("This is already your main photo");
             var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
             if (currentMain != null) currentMain.IsMain = false;
             photo.IsMain = true;
-            if(await _userRepo.SaveAllAsync())return NoContent();
+            if (await _userRepo.SaveAllAsync()) return NoContent();
             return BadRequest("Issue in setting main photo");
 
         }
@@ -123,14 +124,14 @@ namespace CommunicationAPI.Controllers
             if (photo.PublicId != null)
             {
                 var result = await _photoService.DeletePhotoAsync(photo.PublicId);
-                if(result.Error!=null)return BadRequest(result.Error.Message);                
+                if (result.Error != null) return BadRequest(result.Error.Message);
             }
             user.Photos.Remove(photo);
-            if(await _userRepo.SaveAllAsync()) return Ok ();
+            if (await _userRepo.SaveAllAsync()) return Ok();
             return BadRequest("Issue in deleting Photo");
         }
 
-         
+
 
     }
 

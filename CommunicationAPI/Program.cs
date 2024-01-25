@@ -1,9 +1,11 @@
 using CommunicationAPI.Data;
+using CommunicationAPI.Entities;
 using CommunicationAPI.Extension;
 using CommunicationAPI.Interface;
 using CommunicationAPI.Middleware;
 using CommunicationAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.IdentityModel.Tokens;
@@ -54,8 +56,10 @@ var services = scope.ServiceProvider;
 try
 {
 	var context = services.GetRequiredService<DataContext>();
-	await context.Database.MigrateAsync();
-	await Seed.SeedUser(context);
+	var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
+    await context.Database.MigrateAsync();
+    await Seed.SeedUser(userManager,roleManager);
 }
 catch (Exception ex)
 {

@@ -20,6 +20,7 @@ namespace CommunicationAPI.Extension
             services.AddScoped<IuserRepo, UserRepo>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<ILikesRepo, LikesRepo>();
+            services.AddScoped<IMessageRepo, MessageRepo>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));

@@ -26,6 +26,11 @@ import { TextInputComponent } from './_userControls/text-input/text-input.compon
 import { DatePickerComponent } from './_userControls/date-picker/date-picker.component';
 import { PrintComponent } from './print.component';
 import { PortalModule } from '@angular/cdk/portal';
+import { AdminPageComponent } from './admin/admin-page/admin-page.component';
+import { RoleMappingDirective } from './_directives/role-mapping.directive';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
+import { PhotoManagementComponent } from './admin/photo-management/photo-management.component';
+import { RolesModelComponent } from './modals/roles-model/roles-model.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +49,13 @@ import { PortalModule } from '@angular/cdk/portal';
     PhotoEditorComponent,
     TextInputComponent,   
     DatePickerComponent,
-    PrintComponent
+    PrintComponent,
+    AdminPageComponent,
+    RoleMappingDirective,
+    UserManagementComponent,
+    PhotoManagementComponent,
+    RolesModelComponent
+    
   ],
   imports: [
     BrowserModule,
