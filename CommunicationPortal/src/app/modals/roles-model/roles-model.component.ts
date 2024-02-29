@@ -19,8 +19,7 @@ export class RolesModelComponent implements OnInit {
 
   }
 
-  updateChecked(checkedValue: string) {
-    debugger;
+  updateChecked(checkedValue: string) {    
     const index = this.selectedRoles.indexOf(checkedValue);
     index !== -1 ? this.selectedRoles.slice(index, 1) : this.selectedRoles.push(checkedValue);
   }

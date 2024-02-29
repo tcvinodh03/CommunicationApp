@@ -2,6 +2,7 @@
 using CommunicationAPI.Helpers;
 using CommunicationAPI.Interface;
 using CommunicationAPI.Services;
+using CommunicationAPI.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommunicationAPI.Extension
@@ -25,6 +26,9 @@ namespace CommunicationAPI.Extension
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.AddScoped<LogUserActivity>();
+            services.AddSignalR(); // SignalR
+            services.AddSingleton<PresenceTracker>(); // SignalR
+
             return services;
         }
     }

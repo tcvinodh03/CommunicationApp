@@ -4,6 +4,7 @@ using CommunicationAPI.Extension;
 using CommunicationAPI.Interface;
 using CommunicationAPI.Middleware;
 using CommunicationAPI.Services;
+using CommunicationAPI.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -43,13 +44,16 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 // app.UseAuthorization();
 
-app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://localhost:4201"));// AllowCredentials() is for signalR
 
 app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<PresenceHub>("hubs/presence"); // SignalR
+app.MapHub<MessageHub>("hubs/message"); // SignalR
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
@@ -59,6 +63,8 @@ try
 	var userManager = services.GetRequiredService<UserManager<AppUser>>();
     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
     await context.Database.MigrateAsync();
+	await context.Database.ExecuteSqlRawAsync("DELETE FROM [Connections]");
+	//context.Connections.RemoveRange(context.Connections);
     await Seed.SeedUser(userManager,roleManager);
 }
 catch (Exception ex)
