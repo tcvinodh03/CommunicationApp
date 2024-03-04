@@ -13,10 +13,10 @@ namespace CommunicationAPI.Helpers
 
             var userId = resultContent.HttpContext.User.getUserId();
 
-            var repo = resultContent.HttpContext.RequestServices.GetRequiredService<IuserRepo>();
-            var user = await repo.GetUserByIdAsync(userId);
+            var unitOfWork = resultContent.HttpContext.RequestServices.GetRequiredService<IUnitOfWork>();
+            var user = await unitOfWork.userRepo.GetUserByIdAsync(userId);
             user.LastActive = DateTime.Now;
-            await repo.SaveAllAsync();
+            await unitOfWork.Complete();
 
         }
     }

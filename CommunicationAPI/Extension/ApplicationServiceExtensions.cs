@@ -18,16 +18,17 @@ namespace CommunicationAPI.Extension
 
             services.AddCors();
             services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IuserRepo, UserRepo>();
+           // services.AddScoped<IuserRepo, UserRepo>();
             services.AddScoped<IPhotoService, PhotoService>();
-            services.AddScoped<ILikesRepo, LikesRepo>();
-            services.AddScoped<IMessageRepo, MessageRepo>();
+            //services.AddScoped<ILikesRepo, LikesRepo>();
+            //services.AddScoped<IMessageRepo, MessageRepo>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.AddScoped<LogUserActivity>();
             services.AddSignalR(); // SignalR
             services.AddSingleton<PresenceTracker>(); // SignalR
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

@@ -72,10 +72,15 @@ namespace CommunicationAPI.Data
             return await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(u => u.UserName == userName);
         }
 
-        public async Task<bool> SaveAllAsync()
+        public async Task<string> GetUserGender(string userName)
         {
-            return await _context.SaveChangesAsync() > 0;
+            return await _context.Users.Where(s => s.UserName == userName).Select(x => x.Gender).FirstOrDefaultAsync();
         }
+
+        //public async Task<bool> SaveAllAsync()
+        //{
+        //    return await _context.SaveChangesAsync() > 0;
+        //}
 
         public void Update(AppUser user)
         {

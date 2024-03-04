@@ -49,19 +49,17 @@ namespace CommunicationAPI.Data
 
         public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUserName, string recipientName)
         {
-            var messages = await _context.Messages
-                 .Include(u => u.Sender).ThenInclude(p => p.Photos)
-                 .Include(u => u.Recipient).ThenInclude(p => p.Photos)
+            var query = _context.Messages                
                  .Where(
                 m => m.RecipientUserName == currentUserName && m.RecipientDeleted == false &&
                 m.SenderUserName == recipientName ||
                 m.RecipientUserName == recipientName && m.SenderDeleted == false &&
                 m.SenderUserName == currentUserName
                 )
-                 .OrderByDescending(m => m.MessageSent)
-                 .ToListAsync();
+                 .OrderByDescending(m => m.MessageSent).AsQueryable();
+                 
 
-            var unreadMessages = messages.Where(m => m.DataRead == null && m.RecipientUserName == currentUserName).ToList();
+            var unreadMessages = query.Where(m => m.DataRead == null && m.RecipientUserName == currentUserName).ToList();
 
             if (unreadMessages.Any())
             {
@@ -70,18 +68,18 @@ namespace CommunicationAPI.Data
                     message.DataRead = DateTime.UtcNow;
 
                 }
-                await _context.SaveChangesAsync();
+               // await _context.SaveChangesAsync();
             }
 
-            return _objMapper.Map<IEnumerable<MessageDto>>(messages);
+            return await query.ProjectTo<MessageDto>(_objMapper.ConfigurationProvider).ToListAsync();
 
         }
 
 
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _context.SaveChangesAsync() > 0;
-        }
+        //public async Task<bool> SaveAllAsync()
+        //{
+        //    return await _context.SaveChangesAsync() > 0;
+        //}
 
         public void AddGroup(Group group)
         {

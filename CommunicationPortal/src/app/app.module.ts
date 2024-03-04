@@ -33,6 +33,7 @@ import { PhotoManagementComponent } from './admin/photo-management/photo-managem
 import { RolesModelComponent } from './modals/roles-model/roles-model.component';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomRouteReuse } from './_services/customRouteReuseStrategy';
+import { ConfirmDialogComponent } from './_models/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { CustomRouteReuse } from './_services/customRouteReuseStrategy';
     RoleMappingDirective,
     UserManagementComponent,
     PhotoManagementComponent,
-    RolesModelComponent
+    RolesModelComponent,
+    ConfirmDialogComponent
     
   ],
   imports: [
