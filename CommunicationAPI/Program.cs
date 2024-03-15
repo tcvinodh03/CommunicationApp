@@ -14,6 +14,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -50,27 +51,32 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
 
 app.MapHub<PresenceHub>("hubs/presence"); // SignalR
 app.MapHub<MessageHub>("hubs/message"); // SignalR
 
+app.MapFallbackToController("Index", "FallBack");
+
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 try
 {
-	var context = services.GetRequiredService<DataContext>();
-	var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var context = services.GetRequiredService<DataContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
     await context.Database.MigrateAsync();
-	await context.Database.ExecuteSqlRawAsync("DELETE FROM [Connections]");
-	//context.Connections.RemoveRange(context.Connections);
-    await Seed.SeedUser(userManager,roleManager);
+    await Seed.ClearConnections(context);
+    //context.Connections.RemoveRange(context.Connections);
+    await Seed.SeedUser(userManager, roleManager);
 }
 catch (Exception ex)
 {
-	var logger = services.GetService<ILogger<Program>>();
-	logger.LogError(ex, "An error orrcured");
+    var logger = services.GetService<ILogger<Program>>();
+    logger.LogError(ex, "An error orrcured");
 }
 
 app.Run();
